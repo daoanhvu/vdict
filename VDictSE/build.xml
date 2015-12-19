@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="vdictse" default="dist" basedir=".">
+	<property name="src" location="${basedir}/src"/>
+	<property name="build" location="${basedir}/build"/>
+	<property name="dist"  location="${basedir}/dist"/>
+	<property name="bindir"  location="/home/nautilus/bins/vdict"/>
+	
+	<!-- for Ubuntu -->
+	<property name="java.class.path" location="/usr/lib/jvm/jdk1.7.0"/>
+	<property name="addtional.path"  location="${basedir}/dist"/>
+	
+	
+	<path id="project.class.path">
+	    <!-- <pathelement location="${basedir}/lib/swt.jar"/>
+		<pathelement location="${basedir}/lib/velocity-1.7.jar"/> -->
+	    <pathelement path="${java.class.path}/"/>
+	    <pathelement path="${additional.path}"/>
+		<fileset dir="${basedir}/lib">
+		      <include name="*.jar" />
+		 </fileset>
+	  </path>
+	
+	<delete file="${basedir}/dist/vdictse.jar"/>
+	<delete file="${bindir}/vdictse.jar"/>
+	
+	<copy todir="${basedir}/dist/data">
+	    <fileset dir="${basedir}/data" excludes="**/*.java"/>
+	</copy>
+	
+	<target name="init">   
+	</target>
+	
+	<target name="compile" depends="init"  description="compile the source " >
+	    <!-- Compile the java code from ${src} into ${build} -->
+	    <javac srcdir="${src}" destdir="${build}">
+	    	<classpath refid="project.class.path" />
+	    </javac>
+	  </target>
+	
+	<target name="dist" depends="compile"
+	        description="generate the distribution" >
+	    <!-- Create the distribution directory -->
+	    <mkdir dir="${dist}/lib"/>
+
+	    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+	    <jar jarfile="${dist}/vdictse.jar" basedir="${build}">
+	    	<zipgroupfileset dir="${basedir}/lib" includes="**/*.jar" />
+	    	<manifest>
+	    		<attribute name="Main-Class" value="nautilus.vdict.desktop.MainFormSWT" />
+	    	</manifest>
+	    	<fileset file="${src}/vdict.vm"></fileset>
+	    	<fileset file="${basedir}/data/speaker.jpeg"></fileset>
+	    </jar>
+		
+		<copy todir="${bindir}" file="${dist}/vdictse.jar" />
+	 </target>
+	
+	<target name="movejar" depends="dist" description="generate the distribution">
+		<copy todir="${bindir}" file="${dist}/vdictse.jar" />
+	</target>
+	
+</project>

@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; CHARSET=UTF-8' />
+	</head>
+	<body>
+		<h1><font color='#0133ff'>$word</font></h1>
+		<table width="100%">
+			<tr>
+				<td width="100%" align='right'><img width="50" height="50" src="/home/nautilus/bins/vdict/speaker.jpeg" /></td>
+			</tr>
+		</table>
+		<table width='100%'>
+			#foreach ($part in $partsOfSpeeds)
+				<tr>
+					<td bgcolor='#ccffcc'>&nbsp; <font>$part.getPartText()</font> &nbsp; &nbsp; <font>$part.getPronunciation()</font> </td>
+				</tr>
+				
+				<tr>
+					<td>
+					#foreach($mean in $part.getMeans())
+						<font color='#dd0033'>$mean.getUsage()</font>
+						<ul>
+							<li>&nbsp;<font>$mean.getMean()</font></li>
+							#if($mean.getExample() !="")
+								<ul>
+									<li>&nbsp;<font color='#990000' >$mean.getExample()</font></li>
+								</ul>
+							#end
+						</ul>
+					#end
+					</td>
+				</tr>
+			#end
+			<tr><td bgcolor='#cdffcd'>&nbsp;  $relativeWords </td></tr>
+		</table>
+	</body>
+</html>
