@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import nautilus.vdict.data.*;
 
@@ -92,7 +91,7 @@ public class VDictActivity extends Activity {
     	String html = "";
     	
     	html = "<table>";
-    	for(PartOfSpeed p : data.getParts()) {
+    	for(PartOfSpeech p : data.getParts()) {
     		html += "<tr><td>&nbsp;&nbsp;&nbsp;" + p.getMean() + "</td></tr>";
     	}
     	html += "</table>";

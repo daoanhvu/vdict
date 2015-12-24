@@ -1,7 +1,6 @@
 package nautilus.vdict.data;
 
-public class PartOfSpeed
-{
+public class PartOfSpeech {
 	public static final byte VERB = 0;
 	public static final byte NOUN = 1;
 	public static final byte ADVERB = 2;
@@ -10,8 +9,7 @@ public class PartOfSpeed
 	private String mean;
 	private String example;
 	
-	public PartOfSpeed()
-	{
+	public PartOfSpeech() {
 		partCode = 0;
 		mean = null;
 		example = null;

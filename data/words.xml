@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vdict>
+	<word>
+		<text>influence</text>
+		<partOfSpeed name="noun" code="0" domain="">
+			<pronounce>'influəns</pronounce>
+			<plural>influences</plural>
+			<mean>
+				<text>ảnh hưởng, tác dụng</text>
+				<example>under the influence of</example>
+				<exampleMean>Chịu ảnh hưởng của, do ảnh hưởng của</exampleMean>
+			</mean>
+			<mean>
+				<text>Uy thế, thế lực</text>
+				<example>A person of influence</example>
+				<exampleMean>Người có thế lực</exampleMean>
+			</mean>
+			<mean>
+				<text>Người có ảnh hưởng; điều có ảnh hưởng; điều có tác dụng</text>
+			</mean>
+			
+			<mean>
+				<text>Người có thế lực</text>
+			</mean>
+		</partOfSpeed>
+	</word>
+	
+	<word>
+		<text>complex</text>
+		<partOfSpeed name="adj" code="4">
+			<pronounce>'kɔmleks</pronounce>
+			<mean>
+				<text>phức tạp, rắc rối</text>
+				<example>a complex question</example>
+				<exampleMean>một câu hỏi phức tạp</exampleMean>
+			</mean>
+			<mean>
+				<text>Uy thế, thế lực</text>
+				<example>A person of influence</example>
+				<exampleMean>Người có thế lực</exampleMean>
+			</mean>
+			<mean>
+				<text>Người có ảnh hưởng; điều có ảnh hưởng; điều có tác dụng</text>
+			</mean>
+			
+			<mean>
+				<text>Người có thế lực</text>
+			</mean>
+		</partOfSpeed>
+		
+		<partOfSpeed name="noun" code="0" domain="">
+			<pronounce>'kɔmleks</pronounce>
+			<mean>
+				<text>mớ phức tạp, phức hệ</text>
+			</mean>
+			<mean>
+				<text>Nhà máy phức hợp, khu công nghiệp liên hợp</text>
+			</mean>
+		</partOfSpeed>
+		
+		<idiom>
+			<text>inferiority complex</text>
+			<mean>phức cảm tự ti</mean>
+		</idiom>
+		
+		<idiom>
+			<text>superiority complex</text>
+			<mean>phức cảm tự tôn</mean>
+		</idiom>
+		
+	</word>
+	
+	<word>
+		<text>denote</text>
+		<partOfSpeed name="verb" code="1" domain="">
+			<pronounce>di'nout</pronounce>
+			<mean>
+				<text>biểu hiện, biểu thị, chứng tỏ, chỉ rõ</text>
+				<example>a face that denotes energy</example>
+				<exampleMean>bộ mặt biểu hiện nghị lực</exampleMean>
+			</mean>
+			<mean>
+				<text>có nghĩa là</text>
+			</mean>
+			<mean>
+				<text>bao hàm (nghĩa)</text>
+				<example>the word while denotes all white things as snow, papaer, foam...</example>
+				<exampleMean>từ word bao hàm tất cả những vật trắng như tuyết, giấy bọt..</exampleMean>
+			</mean>
+		</partOfSpeed>
+	</word>
+</vdict>

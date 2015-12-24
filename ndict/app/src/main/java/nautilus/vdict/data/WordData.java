@@ -3,27 +3,28 @@ package nautilus.vdict.data;
 import java.util.List;
 import java.util.ArrayList;
 
-public class WordData
-{
-	private long address;
+public class WordData {
+	private WordIndex index;
 	private String word;
 	
-	private List<PartOfSpeed> parts = null;
+	private List<PartOfSpeech> parts = null;
 	private byte[] hashCode = new byte[4]; //Use Soundex algorithm to hash the word
 	
-	public WordData()
-	{
+	public WordData() {
+		index = null;
 		word = null;
 	}
 	
-	public long getAddress()
-	{
-		return address;
+	public long getAddress() {
+		return index.getAddress();
+	}
+
+	public WordIndex getIndex() {
+		return index;
 	}
 	
-	public void setAddress(long value)
-	{
-		address = value;
+	public void setIndex(WordIndex indexObj) {
+		index = indexObj;
 	}
 	
 	public String getWord()
@@ -36,33 +37,31 @@ public class WordData
 		word = value;
 	}
 	
-	public List<PartOfSpeed> getParts()
+	public List<PartOfSpeech> getParts()
 	{
 		return parts;
 	}
 	
-	public void setParts(List<PartOfSpeed> _parts)
+	public void setParts(List<PartOfSpeech> _parts)
 	{
 		parts = _parts;
 	}
 	
-	public void addPart(PartOfSpeed part)
-	{
+	public void addPart(PartOfSpeech part) {
 		if(parts == null)
-			parts = new ArrayList<PartOfSpeed>();
+			parts = new ArrayList<PartOfSpeech>();
 		
 		parts.add(part);
 	}
 	
-	public void addPart(byte partCode, String meaning, String example)
-	{
-		PartOfSpeed part = new PartOfSpeed();
+	public void addPart(byte partCode, String meaning, String example) {
+		PartOfSpeech part = new PartOfSpeech();
 		part.setPartCode(partCode);
 		part.setMean(meaning);
 		part.setExample(example);
 		
 		if(parts == null)
-			parts = new ArrayList<PartOfSpeed>();
+			parts = new ArrayList<PartOfSpeech>();
 		
 		parts.add(part);
 	}
@@ -72,8 +71,7 @@ public class WordData
 		return hashCode;
 	}
 	
-	public void setHashCode(byte[] hc, int offset)
-	{
+	public void setHashCode(byte[] hc, int offset) {
 		hashCode = new byte[4];
 		
 		hashCode[0] = hc[offset];
