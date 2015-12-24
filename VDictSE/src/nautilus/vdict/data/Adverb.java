@@ -2,29 +2,24 @@ package nautilus.vdict.data;
 
 import java.nio.charset.Charset;
 
-public class Adverb extends PartOfSpeech
-{
+public class Adverb extends PartOfSpeech {
 	private String comparative;
 	private String superlative;
 	
-	public Adverb()
-	{
-		partCode = 3;
+	public Adverb() {
 		comparative = null;
 		superlative = null;
 	}
 
     @Override
-    public short getLength()
-    {
+    public short getLength() {
         short length = super.getLength();
         length += (comparative==null?0:(comparative.getBytes(Charset.forName("utf-8"))).length) + 1;
         length += superlative==null?0:(superlative.getBytes(Charset.forName("utf-8"))).length + 1;
         return length;
     }
 	
-	public Adverb(WordData w)
-	{
+	public Adverb(WordData w) {
 		word = w;
 		word.addPart(this);
 		partCode = 3;
@@ -32,8 +27,7 @@ public class Adverb extends PartOfSpeech
 		superlative = null;
 	}
 	
-	public String getComparative()
-	{
+	public String getComparative() {
 		return comparative;
 	}
 	
@@ -50,6 +44,11 @@ public class Adverb extends PartOfSpeech
 	public void setSuperlative(String val)
 	{
 		superlative = val;
+	}
+
+	@Override
+	public byte getPartCode() {
+		return 3;
 	}
 	
 }

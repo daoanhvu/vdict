@@ -49,8 +49,7 @@ import nautilus.vdict.data.WordData;
 import nautilus.vdict.data.WordIndex;
 import nautilus.vdict.data.WordMean;
 
-public class MainFormSWT
-{
+public class MainFormSWT {
 	private static final int WIDTH_PERCENT = 40;
 	private static final String TEMPLATE_PATH = "vdict.vm";
 	private static String executionPath;
@@ -63,47 +62,41 @@ public class MainFormSWT
 	private Text txtSearch;
 	private List lstWords;
 	private Menu menuBar, fileMenu, helpMenu;
-	private MenuItem fileMenuHeader, fileSaveIndex, helpMenuHeader, fileImport, mniTestData;
+	private MenuItem fileMenuHeader, fileSaveIndex, helpMenuHeader;
+	private MenuItem fileImport, mniTestData, overwriteIndex;
 	private MenuItem fileExitItem, showEditItem, helpGetHelpItem;
 	private ModifyListener modifyListener = null;
 	
 	//Template engine, in this case, I use Velocity in separate instances mode
 	private VelocityEngine velocityEngine = null;
 	private Template velocitytemplate;
-	private InputStreamReader templateReader = null;
+//	private InputStreamReader templateReader = null;
 	
 	private VDictionary dictionary;
 	
 	//Event handler for menuitems
-	class ShowEditFormItemListener implements SelectionListener 
-	{
-        public void widgetSelected(SelectionEvent event) 
-        {
+	class ShowEditFormItemListener implements SelectionListener	{
+        public void widgetSelected(SelectionEvent event) {
 //        	display.//
         	EditWordForm editForm = new EditWordForm(dictionary, shell);
         }
         
-        public void widgetDefaultSelected(SelectionEvent event)
-        {
+        public void widgetDefaultSelected(SelectionEvent event) {
         
         }
     }//end class ShowEditFormItemListener
 	
-	class SaveIndexItemListener implements SelectionListener 
-	{
-		public void widgetSelected(SelectionEvent event) 
-        {
+	class SaveIndexItemListener implements SelectionListener {
+		public void widgetSelected(SelectionEvent event) {
         	dictionary.overwriteIndex();
         }
         
-        public void widgetDefaultSelected(SelectionEvent event)
-        {
+        public void widgetDefaultSelected(SelectionEvent event) {
         
         }
     }//end class ShowEditFormItemListener
 	/////////////////////////////
-	public MainFormSWT()
-	{
+	public MainFormSWT() {
 		//char c = 'ɳ';
 		initComponent();
 
@@ -111,8 +104,7 @@ public class MainFormSWT
 		
 		shell.setMaximized(true);
 		shell.open();
-		while(!shell.isDisposed())
-		{
+		while(!shell.isDisposed()){
 			if(!display.readAndDispatch())
 				display.sleep();
 		}
@@ -120,8 +112,7 @@ public class MainFormSWT
 		display.dispose();
 	}
 	
-	private void initComponent()
-	{
+	private void initComponent() {
 		FormLayout layout = new FormLayout();
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
@@ -188,13 +179,31 @@ public class MainFormSWT
 	    	
 	    });
 	    
+	    overwriteIndex = new MenuItem(fileMenu, SWT.PUSH);
+	    overwriteIndex.setText("&Save indices");
+	    overwriteIndex.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				dictionary.overwriteIndex();
+			}
+	    	
+	    });
+
+	    
 	    shell.setMenuBar(menuBar);
 	    
 	    addActionListener();
 	}
 	
-	private void preInitListPane()
-	{
+	private void preInitListPane()	{
 		FormData fdList = new FormData();
 		fdList.width = 200;
 		fdList.left = new FormAttachment(0,5);
@@ -221,57 +230,32 @@ public class MainFormSWT
 		lstWords.setLayoutData(fdList);
 	}
 
-    private void loadData()
-    {
-        Properties pros = new Properties();
-
-        //initialize velocity template engine to load resource from classpath
-        //pros.put("resource.loader", "classpath");
-        //pros.put("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-
-        //initialize velocity template engine to load resource from file system
-        pros.put("resource.loader", "file");
-        pros.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-        pros.put("file.resource.loader.path", "D:/Documents/data/vdict/");
-        pros.put("file.resource.loader.cache", "false");
-        pros.put("file.resource.loader.modificationCheckInterval", "0");
-
+    private void loadData() {
         velocityEngine = new VelocityEngine();
-        velocityEngine.init(pros);
-
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(TEMPLATE_PATH);
-        if(inputStream == null)
-        {
-            //read from local file system path
-            try {
-                inputStream = new FileInputStream(new File("D:/Documents/data/vdict/vdict.vm"));
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        templateReader = new InputStreamReader(inputStream);
-        velocitytemplate = velocityEngine.getTemplate(TEMPLATE_PATH, "UTF-8");
-
-        dictionary = new VDictionary("English - Vietnamese", "D:/Documents/data/vdict/vdict.data", "D:/Documents/data/vdict/vdict.idx");
+        velocityEngine.addProperty("resource.loader", "file");
+        velocityEngine.addProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngine.addProperty("file.resource.loader.path", "D:/projects/workspace/vdictse/src/");
+        velocityEngine.addProperty("file.resource.loader.cache", "false");
+        velocityEngine.addProperty("file.resource.loader.modificationCheckInterval", "0");
+        velocityEngine.init();
+        velocitytemplate = velocityEngine.getTemplate(TEMPLATE_PATH);
+        dictionary = new VDictionary("English - Vietnamese", "D:/projects/nautilus-dictionary/vdict/data/vdict.data", 
+        		"D:/projects/nautilus-dictionary/vdict/data/vdict.idx");
         try {
             dictionary.loadIndex();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        	System.out.println("There is no data at the specified location.");
+            //e.printStackTrace();
         }
     }
 	
-	private void addActionListener()
-	{
+	private void addActionListener() {
 		this.modifyListener = new ModifyListener(){
-			public void modifyText(ModifyEvent e)
-			{
+			public void modifyText(ModifyEvent e) {
 				String s = txtSearch.getText();
 				lstWords.removeAll();
 				
-				if( s.trim().length() > 0 )
-				{
+				if( s.trim().length() > 0 )	{
 					ArrayList<WordIndex> lst = dictionary.initListWord(s);
 					for(int i=0;i<lst.size();i++)
 						lstWords.add(lst.get(i).getWord());
@@ -280,13 +264,11 @@ public class MainFormSWT
 		};
 		
 		FocusListener focusListener = new FocusListener(){
-			public void focusGained(FocusEvent e)
-			{
+			public void focusGained(FocusEvent e) {
 				txtSearch.addModifyListener(modifyListener);
 			}
 			
-			public void focusLost(FocusEvent e)
-			{
+			public void focusLost(FocusEvent e)	{
 				txtSearch.removeModifyListener(modifyListener);
 			}
 		};
@@ -294,12 +276,10 @@ public class MainFormSWT
 		
 		txtSearch.addListener(SWT.Traverse, new Listener(){
 			@Override
-			public void handleEvent(Event event) 
-			{
+			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 				String strHtml = "";
-				if(event.detail == SWT.TRAVERSE_RETURN)
-				{
+				if(event.detail == SWT.TRAVERSE_RETURN)	{
 					String word = txtSearch.getText().trim();
 					showWord(word);
 				}
@@ -308,27 +288,31 @@ public class MainFormSWT
 		});
 		
 		txtSearch.addKeyListener(new KeyAdapter(){
-			public void keyPressed(KeyEvent e)
-			{
-				if(e.keyCode == SWT.ARROW_DOWN)
-				{
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.ARROW_DOWN)	{
 					//System.out.println("[MAINFORMSWT] txtsearch arrow down ");
 					lstWords.setSelection(0);
 					lstWords.setFocus();
+				} else {
+					String text = txtSearch.getText().trim();
+					if(!"".equals(text)) {
+						java.util.List<WordIndex> results = dictionary.initListWord(text);
+						for(WordIndex index: results) {
+							lstWords.add(index.getWord());
+						}
+					}
 				}
 			}
 		});
 		
 		lstWords.addSelectionListener(new SelectionListener(){
-			public void widgetSelected(SelectionEvent e)
-			{
+			public void widgetSelected(SelectionEvent e){
 				List lst = (List)e.getSource();
 				int idx = lst.getSelectionIndex();
 				txtSearch.setText(lst.getItem(idx));
 			}
 			
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
+			public void widgetDefaultSelected(SelectionEvent e)	{
 				List lst = (List)e.getSource();
 				int idx = lst.getSelectionIndex();
 				txtSearch.setText(lst.getItem(idx));
@@ -336,10 +320,8 @@ public class MainFormSWT
 		});
 		
 		lstWords.addListener(SWT.Traverse, new Listener(){
-			public void handleEvent(Event e)
-			{
-				if(e.detail == SWT.TRAVERSE_RETURN)
-				{
+			public void handleEvent(Event e) {
+				if(e.detail == SWT.TRAVERSE_RETURN)	{
 					showWord(lstWords.getItem(lstWords.getSelectionIndex()));
 				}
 			}
@@ -347,50 +329,45 @@ public class MainFormSWT
 		
 		
 		shell.addListener(SWT.Close, new Listener() {
-		      public void handleEvent(Event event) 
-		      {
+		      public void handleEvent(Event event) {
 		        //dictionary.overwriteIndex();
 		    	  
-		    	  if(templateReader != null)
-					try {
-						templateReader.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//		    	  if(templateReader != null) {
+//					try {
+//						templateReader.close();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//		    	  }
 		      }
 		    });
 		
 		//System.out.println(this.getClass().getClassLoader().getResource("speaker.jpeg"));
 	}
 	
-	private void showWord(String sWord)
-	{
+	private void showWord(String sWord) {
 		if(sWord.length() <= 0)
 			return;
 		
 		String strHtml;
 		WordIndex index = dictionary.findIndex(sWord);
-		if(index != null)
-		{
+		if(index != null) {
             try{
                 WordData wd = dictionary.readWord(index.getAddress());
                 //System.out.println(String.format("[MAINFORMSWT] Address Of %s: %d -> word: %s",sWord, index.getAddress(), wd));
-                if(wd != null)
-                {
+                if(wd != null) {
                     wd.setIndex(index);
                     strHtml = formatHtml(wd);
                     browser.setText(strHtml);
                 }
-            }catch(IOException ie)
-            {
+            } catch(IOException ie) {
                 ie.printStackTrace();
             }
 		}
 	}
 	
-	private String formatHtml(WordData word)
-	{
+	private String formatHtml(WordData word) {
 		VelocityContext context = new VelocityContext();
 		String html = "";
 		try {
@@ -413,10 +390,8 @@ public class MainFormSWT
 		}
 	}
 	
-	public static String getExecutionPath()
-	{
-		if(executionPath==null || executionPath.trim().equals(""))
-		{
+	public static String getExecutionPath()	{
+		if(executionPath==null || executionPath.trim().equals("")) {
 			String path = MainFormSWT.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 			File f = new File(path);
 			executionPath = f.getParentFile().getPath();
@@ -424,8 +399,7 @@ public class MainFormSWT
 		return executionPath;
 	}
 	
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		MainFormSWT app = new MainFormSWT();
 	}
 }

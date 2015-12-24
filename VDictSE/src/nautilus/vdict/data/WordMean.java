@@ -3,10 +3,8 @@ package nautilus.vdict.data;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-public class WordMean
-{
-	public static final HashMap<Byte,String> DomainMap = new HashMap<Byte,String>()
-	{
+public class WordMean {
+	public static final HashMap<Byte,String> DomainMap = new HashMap<Byte,String>()	{
 		{
 			put((byte)0, "General");
 			put((byte)1, "Khoa hoc may tinh");
@@ -18,24 +16,29 @@ public class WordMean
 		}
 	};
 			
-	private String usage;
+	private String mUsage;
 	private String mean;
 	private String example;
 	private byte domain;
 	
-	public WordMean(String m, String ex, String us, byte dm)
-	{
+	/**
+	 * 
+	 * @param m
+	 * @param ex
+	 * @param usage
+	 * @param dm
+	 */
+	public WordMean(String m, String ex, String usage, byte dm) {
 		domain = dm;
-		usage = us;
+		mUsage = usage;
 		mean = m;
 		example = ex;
 	}
 	
-	public short getLength()
-	{
+	public short getLength() {
         short length = 0;
-		if(usage != null)
-			length += (short)((usage.getBytes(Charset.forName("utf-8"))).length);
+		if(mUsage != null)
+			length += (short)((mUsage.getBytes(Charset.forName("utf-8"))).length);
 		if(mean != null)
 			length += (short)((mean.getBytes(Charset.forName("utf-8"))).length);
 		if(example != null)
@@ -44,33 +47,27 @@ public class WordMean
 		return length;
 	}
 	
-	public String getUsage()
-	{
-		return usage;
+	public String getUsage() {
+		return mUsage;
 	}
 	
-	public void setUsage(String val)
-	{
-		usage = val;
+	public void setUsage(String val) {
+		mUsage = val;
 	}
 	
-	public String getMean()
-	{
+	public String getMean()	{
 		return mean;
 	}
 	
-	public void setMean(String meanValue)
-	{
+	public void setMean(String meanValue) {
 		mean = meanValue;
 	}
 	
-	public String getExample()
-	{
+	public String getExample() {
 		return example;
 	}
 	
-	public void setExample(String exValue)
-	{
+	public void setExample(String exValue) {
 		example = exValue;
 	}
 
@@ -78,8 +75,7 @@ public class WordMean
     *   Moi mean co the co nhieu example.
     *   moi example cach nhau bang mot dau ;
     * */
-    public String[] getExamples()
-    {
+    public String[] getExamples() {
         if(example == null)
             return null;
         String[] ex = example.split(";");
@@ -87,19 +83,16 @@ public class WordMean
         return ex;
     }
 
-	public byte getDomain()
-	{
+	public byte getDomain() {
 		return domain;
 	}
 	
-	public void setDomain(byte val)
-	{
+	public void setDomain(byte val) {
 		domain = val;
 	}
 	
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return mean + " - " + example;
 	}
 }

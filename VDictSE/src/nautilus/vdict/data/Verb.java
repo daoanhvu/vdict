@@ -2,21 +2,18 @@ package nautilus.vdict.data;
 
 import java.nio.charset.Charset;
 
-public class Verb extends PartOfSpeech
-{
+public class Verb extends PartOfSpeech {
 	private String past;
 	private String pastPerfect;
 	private String gerundForm;
 	
-	public Verb()
-	{
+	public Verb() {
 		past = null;
 		pastPerfect = null;
 		gerundForm = null;
 	}
 	
-	public Verb(byte pc)
-	{
+	public Verb(byte pc) {
 		word = null;
 		partCode = pc;
 		past = null;
@@ -24,8 +21,7 @@ public class Verb extends PartOfSpeech
 		gerundForm = null;
 	}
 	
-	public Verb(byte pc, WordData w)
-	{
+	public Verb(byte pc, WordData w) {
 		word = w;
 		word.addPart(this);
 		partCode = pc;
@@ -35,8 +31,7 @@ public class Verb extends PartOfSpeech
 	}
 
     @Override
-    public short getLength()
-    {
+    public short getLength() {
         short length = super.getLength();
         length += (past==null?0:(past.getBytes(Charset.forName("utf-8"))).length) + 1;
         length += pastPerfect==null?0:(pastPerfect.getBytes(Charset.forName("utf-8"))).length + 1;
@@ -44,33 +39,32 @@ public class Verb extends PartOfSpeech
         return length;
     }
 	
-	public String getPast()
-	{
+	public String getPast() {
 		return past;
 	}
 	
-	public void setPast(String val)
-	{
+	public void setPast(String val) {
 		past = val;
 	}
 	
-	public String getPastPerfect()
-	{
+	public String getPastPerfect() {
 		return pastPerfect;
 	}
 	
-	public void setPastPerfect(String val)
-	{
+	public void setPastPerfect(String val) {
 		pastPerfect = val;
 	}
 	
-	public String getGerundForm()
-	{
+	public String getGerundForm() {
 		return gerundForm;
 	}
 	
-	public void setGerundForm(String val)
-	{
+	public void setGerundForm(String val) {
 		gerundForm = val;
+	}
+	
+	@Override
+	public byte getPartCode() {
+		return 1;
 	}
 }

@@ -5,17 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class PartOfSpeech
-{
+public abstract class PartOfSpeech {
 	protected WordData word;
 	protected byte partCode;
 	protected String pronunciation;
 	protected List<WordMean> means;
-	protected List<Idiom> idms;
+	protected final List<Idiom> idms = new ArrayList<Idiom>();
 	protected String description;
 	
-	public static final HashMap<Byte,String> PartName = new HashMap<Byte,String>()
-	{
+	public static final HashMap<Byte,String> PartName = new HashMap<Byte,String>() {
 		{
 			put((byte)0, "n"); 		//noun
 			put((byte)1, "tr. v"); 		//transitive verb
@@ -27,14 +25,12 @@ public abstract class PartOfSpeech
 		}
 	};
 	
-	public PartOfSpeech()
-	{
+	public PartOfSpeech(){
 		partCode = 0;
 		means = new ArrayList<WordMean>();
 	}
 	
-	public PartOfSpeech(WordData w)
-	{
+	public PartOfSpeech(WordData w)	{
 		word = w;
 		partCode = 0;
 		means = new ArrayList<WordMean>();
@@ -42,8 +38,7 @@ public abstract class PartOfSpeech
 		word.addPart(this);
 	}
 	
-	public short getLength()
-    {
+	public short getLength() {
         byte[] temp;
         short length;
 
@@ -65,71 +60,58 @@ public abstract class PartOfSpeech
     }
 	
 	
-	public byte getPartCode()
-	{
-		return partCode;
-	}
+	public abstract byte getPartCode();
 	
-	public void setPartCode(byte value)
-	{
+	public void setPartCode(byte value)	{
 		partCode = value;
 	}
 	
-	public WordData getWord()
-	{
+	public WordData getWord() {
 		return word;
 	}
 	
-	public void setWord(WordData wd)
-	{
+	public void setWord(WordData wd) {
 		word = wd;
 	}
 	
-	public String getPartText()
-	{
+	public String getPartText() {
 		return PartOfSpeech.PartName.get(partCode);
 	}
 	
-	public String getPronunciation()
-	{
+	public String getPronunciation() {
 		return pronunciation;
 	}
 	
-	public void setPronunciation(String value)
-	{
+	public void setPronunciation(String value) {
 		pronunciation = value;
 	}
 	
-	public void setMeans(List<WordMean> value)
-	{
+	public void setMeans(List<WordMean> value) {
 		means = value;
 	}
 	
-	public List<WordMean> getMeans()
-	{
+	public List<WordMean> getMeans() {
 		return means;
 	}
 	
-	public void setIdms(List<Idiom> value)
-	{
-		idms = value;
+	public void setIdms(List<Idiom> value) {
+//		idms = value;
+		idms.clear();
+		idms.addAll(value);
 	}
 	
-	public List<Idiom> getIdms()
-	{
+	public List<Idiom> getIdms() {
 		return idms;
 	}
 	
-	public void addMean(WordMean mean)
-	{
+	public void addMean(WordMean mean) {
 		if(means == null)
 			means = new ArrayList<WordMean>();
 		
 		means.add(mean);
 	}
 	
-	public void addMean(String m, String ex, String usg, byte dm)
-	{
+	public void addMean(String m, String ex, String usg, byte dm) {
 		WordMean mean = new WordMean(m, ex, usg, dm);
 		if(means == null)
 			means = new ArrayList<WordMean>();
@@ -137,26 +119,22 @@ public abstract class PartOfSpeech
 		means.add(mean);
 	}
 	
-	public void addIdiom(Idiom idm)
-	{
-		if(idms == null)
-			idms = new ArrayList<Idiom>();
+	public void addIdiom(Idiom idm) {
+//		if(idms == null)
+//			idms = new ArrayList<Idiom>();
 		
 		idms.add(idm);
 	}
 	
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 	
-	public void setDescription(String val)
-	{
+	public void setDescription(String val)	{
 		description = val;
 	}
 	
-	public boolean removeMean(WordMean mean)
-	{
+	public boolean removeMean(WordMean mean) {
 		if(means == null)
 			return false;
 		

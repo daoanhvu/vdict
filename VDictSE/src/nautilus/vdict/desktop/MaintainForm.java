@@ -1,21 +1,26 @@
 package nautilus.vdict.desktop;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import nautilus.vdict.data.Adjective;
+import nautilus.vdict.data.Adverb;
 import nautilus.vdict.data.Idiom;
+import nautilus.vdict.data.Noun;
 import nautilus.vdict.data.PartOfSpeech;
 import nautilus.vdict.data.VDictionary;
+import nautilus.vdict.data.Verb;
 import nautilus.vdict.data.WordData;
 import nautilus.vdict.data.WordIndex;
 import nautilus.vdict.data.WordMean;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -26,17 +31,19 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-public class MaintainForm 
-{
+public class MaintainForm {
 	private Shell shell = null;
 	private Button btnImport, btnBrowse;
 	private Text txtFile;
 	
 	private VDictionary dictionary;
 	
-	public MaintainForm(Shell parent, VDictionary dict)
-	{
+	public MaintainForm(Shell parent, VDictionary dict)	{
 		dictionary = dict;
 		shell = new Shell(parent);
 		shell.setSize(350, 200);
@@ -44,8 +51,7 @@ public class MaintainForm
 		shell.open();
 	}
 	
-	private void initComponents()
-	{
+	private void initComponents() {
 		FormLayout layout = new FormLayout();
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
@@ -66,7 +72,7 @@ public class MaintainForm
 		fdEdit.width = 170;
 		txtFile.setLayoutData(fdEdit);
 		//
-		txtFile.setText("./data.xls");
+		txtFile.setText("D:\\projects\\nautilus-dictionary\\vdict\\data\\words.xml");
 		
 		//btnBrowse
 		btnBrowse = new Button(shell, SWT.PUSH);
@@ -89,122 +95,145 @@ public class MaintainForm
 			@Override
 			public void handleEvent(Event arg0) {
 				// TODO Auto-generated method stub
-				readExcelFile();
+				String filepath = txtFile.getText();
+				readXMLFile(filepath);
 			}
 			
 		});
 
 	}
 	
-	private void readExcelFile()
-	{
+	/**
+	 * This method read words from xml file using DOM
+	 * */
+	private void readXMLFile(String filepath) {
 		int i;
-		FileInputStream fis;
+		WordData word;
+		PartOfSpeech part = null;
 		try {
-			String datafile = txtFile.getText();
-			//fis = new FileInputStream(datafile);
-			fis = new FileInputStream("/home/nautilus/bins/vdict/data.xls");
-			Workbook wb = new HSSFWorkbook(fis);
-			Sheet sheet1 = wb.getSheetAt(0);
-			WordIndex windex = null;
-			WordData worddata = null;
-			WordMean mean = null;
-			Idiom idm = null;
-			PartOfSpeech part = null;
-			boolean shouldWrite = false;
+			File fXmlFile = new File(filepath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			
-			System.out.println("[MaintainForm] Number of record in data file: " + sheet1.getLastRowNum());
+			//Get root element
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
 			
-			for(i=1;i<=sheet1.getLastRowNum();i++)
-			{
-				Row row = sheet1.getRow(i);
+			NodeList nList = doc.getElementsByTagName("word");
+			
+			for(i=0; i < nList.getLength(); i++) {
+				Element w = (Element)nList.item(i);
+				word = new WordData();
 				
-				Cell cell0 = row.getCell(0);
-				Cell cell1 = row.getCell(1);
-				Cell cell2 = row.getCell(2);
-				Cell cell3 = row.getCell(3);
-				Cell cell4 = row.getCell(4);
-				Cell cell5 = row.getCell(5);
-				Cell cell6 = row.getCell(6);
-				Cell cell7 = row.getCell(7);
-				Cell cell8 = row.getCell(8);
-				Cell cell9 = row.getCell(9);
-				Cell cell10 = row.getCell(10);
-				Cell cell11 = row.getCell(11);
-				Cell cell12 = row.getCell(12);
-				
-				//System.out.println("" + cell5);
-				
-				String strWord = cell0==null?"":cell0.getRichStringCellValue().getString();
-				String relatetiveWord = cell1==null?"":cell1.getRichStringCellValue().getString();
-				byte partCode = (byte)cell2.getNumericCellValue();
-				String pronunciation = cell3.getRichStringCellValue().getString();
-				String strMean = cell4.getRichStringCellValue().getString();
-				String meanUsage = cell5==null?"":cell5.getRichStringCellValue().getString();
-				String strExmp = cell6==null?"":cell6.getRichStringCellValue().getString();
-				byte domain = (byte) cell7.getNumericCellValue();
-				String idiom = cell8==null?"":cell8.getRichStringCellValue().getString();
-				String idiomUsage = cell9==null?"":cell9.getRichStringCellValue().getString();
-				String idiomMean = cell10==null?"":cell10.getRichStringCellValue().getString();
-				String idiomExmp = cell11==null?"":cell11.getRichStringCellValue().getString();
-				String idiomDomain = cell12==null?"":cell12.getRichStringCellValue().getString();
-				
-				if(strWord.trim().length() > 0)
-				{
-					if(shouldWrite)
-					{
-						//write the previous world
-						//dictionary.writeWord(worddata);
-						dictionary.addWord2HashTable(worddata);
-						System.out.println("[MaintainForm] write word to file.");
-						shouldWrite = false;
-					}
-					else
-						shouldWrite = true;
+				//I don't want to check null here, 
+				//text is a mandatory field of a word
+				String wordText = getFirsChild("text", w).getTextContent();
+				word.setWordString(wordText);
+				NodeList parts = w.getElementsByTagName("partOfSpeed");
+				for(int j=0; j<parts.getLength(); j++) {
+					Element partEl = (Element)parts.item(j);
+					byte pCode = Byte.parseByte(partEl.getAttribute("code"));
+					String pronounce = getFirsChild("pronounce", partEl).getTextContent();
 					
-					//form a new new word
-					windex = dictionary.findIndex(strWord);
-					if(windex != null)
-					{
-						worddata = dictionary.readWord(windex.getAddress());
+					switch(pCode) {
+						case 0:
+							part = new Noun();
+							Node pluralEl = getFirsChild("plural", partEl);
+							if(pluralEl != null) {
+								String plural = pluralEl.getTextContent();
+								((Noun)part).setPluralForm(plural);
+							}
+							break;
+							
+						case 1:
+						case 2:
+							part = new Verb();
+							break;
+							
+						case 3:
+							part = new Adverb();
+							break;
+							
+						case 4:
+							part = new Adjective();
+							break;
 					}
-					else
-					{
-						windex = new WordIndex(strWord);
-						worddata = new WordData();
-						worddata.setIndex(windex);
-						worddata.setRelativeWord(relatetiveWord);
-					}
-				}
-				part = WordData.createPartByCode(partCode);
-				part.setPronunciation(pronunciation);
-				mean = new WordMean(strMean, strExmp, meanUsage, domain);
-				
-				if(idiom.trim().length() > 0)
-				{
-					idm = new Idiom();
-					idm.setIdm(idiom);
-					idm.setMean(new WordMean(idiomMean, idiomExmp, idiomUsage, Byte.parseByte(idiomDomain)));
-					part.addIdiom(idm);
-				}
-				
-				part.addMean(mean);
-				worddata.addPart(part);
-			}//end for
-			
 
-			if(shouldWrite)
-			{
-				//write the previous world
-				//dictionary.writeWord(worddata);
-				dictionary.addWord2HashTable(worddata);
-				System.out.println("[MaintainForm] write word to file.");
+					part.setPronunciation(pronounce);
+					
+					//Get mean
+					NodeList means = partEl.getElementsByTagName("mean");
+					for(int k=0; k<means.getLength(); k++) {
+						Element meanEl = (Element)means.item(k);
+						String meanText = getFirsChild("text", meanEl).getTextContent();
+						Node exampleNode = getFirsChild("example", meanEl);
+						String example = null;
+						String meanExample = null;
+						if(exampleNode != null) {
+							example = exampleNode.getTextContent();
+						}
+						
+						Node exampleMeanNode = getFirsChild("exampleMean", meanEl);
+						if(exampleMeanNode != null) {
+							meanExample = exampleMeanNode.getTextContent();
+						}
+						
+						WordMean mean = new WordMean(meanText, example, null, (byte)0);
+						part.addMean(mean);
+					}
+					
+					word.addPart(part);
+				}
+				
+				WordIndex index = dictionary.findIndex(wordText);
+				if(index == null) {
+					index = new WordIndex();
+					index.setWord(wordText);
+				} else {
+					WordData word1;
+					if(index.getAddress() >= 0){
+						word1 = dictionary.readWord(index.getAddress());
+						if(word1.getLength() < word.getLength()) {
+							dictionary.markAsDeleted(word1);
+							index.setAddress(-1);
+						}
+					}
+				}
+				
+				word.setIndex(index);
+				dictionary.addWord2HashTable(word);
+				
+				dictionary.writeWord(word);
 			}
-			
-			fis.close();
-		} catch (IOException e) 
-		{
+		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private List<Node> getChilds(String name, Element el){
+		List<Node> result = new ArrayList<Node>();
+		Node first = el.getFirstChild();
+		
+		while( first != null) {
+			if(first.getNodeName().equals(name)) {
+				result.add(first);
+			}
+			first = first.getNextSibling();
+		}
+		
+		return result;
+	}
+	
+	private Node getFirsChild(String name, Element el){
+		Node first = el.getFirstChild();
+		
+		while( (first != null) && (!first.getNodeName().equals(name)) ) {
+			first = first.getNextSibling();
+		}
+		
+		if( (first != null) && (!first.getNodeName().equals(name)) )
+			return null;
+		
+		return first;
 	}
 }

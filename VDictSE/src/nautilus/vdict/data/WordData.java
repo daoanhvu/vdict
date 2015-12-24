@@ -4,8 +4,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.ArrayList;
 
-public class WordData
-{
+public class WordData {
 	private WordIndex index;
 	private String wordString;
 
@@ -13,13 +12,11 @@ public class WordData
 	private byte[] hashCode = new byte[4]; //Use Soundex algorithm to hash the word
 	private String relativeWord = null;
 	
-	public WordData()
-	{
+	public WordData() {
 		index = null;
 	}
 	
-	public short getLength()
-	{
+	public short getLength() {
         short length = 1;
 		if(relativeWord != null)
 		    length += (short) (relativeWord.getBytes(Charset.forName("utf-8"))).length;
@@ -30,43 +27,35 @@ public class WordData
 		return length;
 	}
 	
-	public long getAddress()
-	{
+	public long getAddress() {
 		return index!=null?index.getAddress():-1;
 	}
 	
-	public WordIndex getIndex()
-	{
+	public WordIndex getIndex() {
 		return index;
 	}
 	
-	public void setIndex(WordIndex value)
-	{
+	public void setIndex(WordIndex value) {
 		index = value;
 	}
 	
-	public String getWordString() 
-	{
+	public String getWordString() {
 		return wordString;
 	}
 
-	public void setWordString(String wordString) 
-	{
+	public void setWordString(String wordString) {
 		this.wordString = wordString;
 	}
 	
-	public List<PartOfSpeech> getParts()
-	{
+	public List<PartOfSpeech> getParts() {
 		return parts;
 	}
 	
-	public void setParts(List<PartOfSpeech> _parts)
-	{
+	public void setParts(List<PartOfSpeech> _parts) {
 		parts = _parts;
 	}
 	
-	public void addPart(PartOfSpeech part)
-	{
+	public void addPart(PartOfSpeech part) {
 		if(parts == null)
 			parts = new ArrayList<PartOfSpeech>();
 		
@@ -74,8 +63,7 @@ public class WordData
 		parts.add(part);
 	}
 	
-	public void addPart(byte partCode, List<WordMean> means)
-	{
+	public void addPart(byte partCode, List<WordMean> means) {
         PartOfSpeech part = createPartByCode(partCode);
 		part.setMeans(means);
 		
@@ -86,34 +74,28 @@ public class WordData
 		parts.add(part);
 	}
 	
-	public void removePart(PartOfSpeech part)
-	{
+	public void removePart(PartOfSpeech part) {
 		parts.remove(part);
 	}
 	
-	public void removePart(Byte pc)
-	{
-		for(PartOfSpeech p: parts)
-		{
-			if(p.getPartCode() == pc)
-			{
+	public void removePart(Byte pc)	{
+		for(PartOfSpeech p: parts){
+			if(p.getPartCode() == pc) {
 				parts.remove(p);
 				return;
 			}
 		}
 	}
 	
-	public void addMean(byte partCode, String mean, String example, String pronuciation, String usage, String pastForm, byte dm)
-	{
+	public void addMean(byte partCode, String mean, String example, 
+			String pronuciation, String usage, String pastForm, byte dm) {
         PartOfSpeech part;
 		
 		if(parts == null)
 			parts = new ArrayList<PartOfSpeech>();
 		
-		for(PartOfSpeech p: parts)
-		{
-			if(p.getPartCode() == partCode)
-			{
+		for(PartOfSpeech p: parts) {
+			if(p.getPartCode() == partCode)	{
 				p.addMean(mean, example, usage, dm);
 				return;
 			}
@@ -128,12 +110,9 @@ public class WordData
 		parts.add(part);
 	}
 	
-	public PartOfSpeech getPartByCode(byte pc)
-	{
-		for(PartOfSpeech p: parts)
-		{
-			if(p.getPartCode() == pc)
-			{
+	public PartOfSpeech getPartByCode(byte pc) {
+		for(PartOfSpeech p: parts) {
+			if(p.getPartCode() == pc) {
 				return p;
 			}
 		}
@@ -141,13 +120,11 @@ public class WordData
 		return null;
 	}
 	
-	public byte[] getHashCode()
-	{
+	public byte[] getHashCode() {
 		return hashCode;
 	}
 	
-	public void setHashCode(byte[] hc, int offset)
-	{
+	public void setHashCode(byte[] hc, int offset) {
 		hashCode = new byte[4];
 		
 		hashCode[0] = hc[offset];
@@ -156,22 +133,18 @@ public class WordData
 		hashCode[3] = hc[offset+3];
 	}
 	
-	public String getRelativeWord()
-	{
+	public String getRelativeWord()	{
 		return relativeWord;
 	}
 	
-	public void setRelativeWord(String value)
-	{
+	public void setRelativeWord(String value) {
 		relativeWord = value;
 	}
 	
-	public static PartOfSpeech createPartByCode(byte partCode)
-	{
+	public static PartOfSpeech createPartByCode(byte partCode) {
         PartOfSpeech p = null;
 		
-		switch(partCode)
-		{
+		switch(partCode) {
 			case 0:
 				p = new Noun();
 				break;

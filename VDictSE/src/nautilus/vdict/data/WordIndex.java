@@ -7,12 +7,47 @@ package nautilus.vdict.data;
  * 
  * */
 
-public class WordIndex implements Comparable<WordIndex>
-{
-	private static final char[][] uMap = {{0,'0'},{1,'1'},{2,'2'},{3,'3'},{4,'4'},{5,'5'},{6,'6'},{7,'7'},{8,'8'},{9,'9'},
-		{10,'a'},{11,'ă'},{12,'â'},{13,'b'}, {14,'c'},{15,'d'},{16,'đ'},{17,'e'},{18,'ê'},{19,'g'},
-		{20,'h'}, {21, 'i'}, {22, 'k'}, {23,'l'}, {24, 'm'}, {25,'n'},{26,'o'},{27,'ô'},{28,'ơ'}, {29,'p'},
-		{30,'q'},{31,'r'},{32,'s'},{33,'t'}, {34,'u'}, {35,'ư'}, {36,'v'}, {37,'x'}, {38,'y'}};
+public class WordIndex implements Comparable<WordIndex> {
+	private static final char[][] uMap = {
+			{0,'0'},
+			{1,'1'},
+			{2,'2'},
+			{3,'3'},
+			{4,'4'},
+			{5,'5'},
+			{6,'6'},
+			{7,'7'},
+			{8,'8'},
+			{9,'9'},
+			{10,'a'},
+			{11,'ă'},
+			{12,'â'},
+			{13,'b'},
+			{14,'c'},
+			{15,'d'},
+			{16,'đ'},
+			{17,'e'},
+			{18,'ê'},
+			{19,'g'},
+			{20,'h'},
+			{21, 'i'},
+			{22, 'k'},
+			{23,'l'},
+			{24, 'm'},
+			{25,'n'},
+			{26,'o'},
+			{27,'ô'},
+			{28,'ơ'},
+			{29,'p'},
+			{30,'q'},
+			{31,'r'},
+			{32,'s'},
+			{33,'t'},
+			{34,'u'},
+			{35,'ư'},
+			{36,'v'},
+			{37,'x'},
+			{38,'y'}};
 	private static final int MAX_CHAR_COUNT = 39;
 	
 	private long address;
@@ -21,47 +56,39 @@ public class WordIndex implements Comparable<WordIndex>
 	
 	private WordIndex next;
 	
-	public WordIndex()
-	{
+	public WordIndex()	{
 		word = null;
 		address = -1;
 		next = null;
 	}
 	
-	public WordIndex(String w)
-	{
+	public WordIndex(String w){
 		word = w;
 		address = -1;
 		next = null;
 	}
 	
-	public long getAddress()
-	{
+	public long getAddress(){
 		return address;
 	}
 	
-	public String getWord()
-	{
+	public String getWord()	{
 		return word;
 	}
 	
-	public void setWord(String w)
-	{
+	public void setWord(String w){
 		word = w;
 	}
 	
-	public void setAddress(long val)
-	{
+	public void setAddress(long val){
 		address = val;
 	}
 	
-	public byte[] getHashCode()
-	{
+	public byte[] getHashCode()	{
 		return hashCode;
 	}
 	
-	public void setHashCode(byte[] hc, int offset)
-	{
+	public void setHashCode(byte[] hc, int offset){
 		hashCode = new byte[4];
 		
 		hashCode[0] = hc[offset];
@@ -70,10 +97,8 @@ public class WordIndex implements Comparable<WordIndex>
 		hashCode[3] = hc[offset+3];
 	}
 	
-	public void setNext(WordIndex _next)
-	{
-		if( next != null )
-		{
+	public void setNext(WordIndex _next){
+		if( next != null ){
 			next.setNext(_next);
 			return;
 		}
@@ -81,17 +106,14 @@ public class WordIndex implements Comparable<WordIndex>
 		next = _next;
 	}
 	
-	public WordIndex getNext()
-	{
+	public WordIndex getNext(){
 		return next;
 	}
 	
-	private static int compare(char a, char b)
-	{
+	private static int compare(char a, char b){
 		int i, codeA=-1, codeB=-1;
 		
-		for(i=0; i<MAX_CHAR_COUNT; i++)
-		{
+		for(i=0; i<MAX_CHAR_COUNT; i++)	{
 			if(uMap[i][1]==a)
 				codeA = uMap[i][0];
 			
@@ -103,28 +125,25 @@ public class WordIndex implements Comparable<WordIndex>
 	}
 
 	@Override
-	public int compareTo(WordIndex value) 
-	{
+	public int compareTo(WordIndex value){
 		String thisStr = this.getWord();
 		String comparedStr = null;
 		int shorterLen=0, cc=0;
 		
-		if(value != null)
-		{
+		if(value != null){
 			comparedStr = value.getWord();
 			
 			shorterLen = thisStr.length()<comparedStr.length()?thisStr.length():comparedStr.length();
 			
-			for(int i=0;i<shorterLen;i++)
-			{
+			for(int i=0;i<shorterLen;i++){
 				cc = compare(thisStr.charAt(i), comparedStr.charAt(i));
-				if(cc > 0)
-				{
+				if(cc > 0){
 					return 1;
 				}
-				else
+				else {
 					if(cc < 0)
 						return -1;
+				}
 			}
 		}
 		

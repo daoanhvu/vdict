@@ -2,22 +2,19 @@ package nautilus.vdict.data;
 
 import java.nio.charset.Charset;
 
-public class Adjective extends PartOfSpeech
-{
+public class Adjective extends PartOfSpeech {
 	private String comparative;
 	private String superlative;
 	private String adverbForm;
 	
-	public Adjective()
-	{
+	public Adjective() {
 		partCode = 4;
 		comparative = null;
 		superlative = null;
 		adverbForm = null;
 	}
 	
-	public Adjective(WordData w)
-	{
+	public Adjective(WordData w) {
 		partCode = 4;
 		word = w;
 		word.addPart(this);
@@ -27,8 +24,7 @@ public class Adjective extends PartOfSpeech
 	}
 
     @Override
-	public short getLength()
-    {
+	public short getLength() {
 		short length = super.getLength();
         length += (comparative==null?0:(comparative.getBytes(Charset.forName("utf-8"))).length) + 1;
         length += superlative==null?0:(superlative.getBytes(Charset.forName("utf-8"))).length + 1;
@@ -36,33 +32,32 @@ public class Adjective extends PartOfSpeech
 		return length;
 	}
 	
-	public String getComparative()
-	{
+	public String getComparative() {
 		return comparative;
 	}
 	
-	public void setComparative(String val)
-	{
+	public void setComparative(String val) {
 		comparative = val;
 	}
 	
-	public String getSuperlative()
-	{
+	public String getSuperlative() {
 		return superlative;
 	}
 	
-	public void setSuperlative(String val)
-	{
+	public void setSuperlative(String val) {
 		superlative = val;
 	}
 	
-	public String getAdverbForm()
-	{
+	public String getAdverbForm() {
 		return adverbForm;
 	}
 	
-	public void setAdverbForm(String val)
-	{
+	public void setAdverbForm(String val) {
 		adverbForm = val;
+	}
+
+	@Override
+	public byte getPartCode() {
+		return 4;
 	}
 }

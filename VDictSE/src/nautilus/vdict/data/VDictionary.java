@@ -7,8 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class VDictionary
-{
+public class VDictionary {
 	/* Implements the mapping
 	   * from: AEHIOUWYBFPVCGJKQSXZDTLMNR
 	   * to:   00000000111122222222334556
@@ -37,30 +36,25 @@ public class VDictionary
 	private String index_file;
 	private WordIndex[][][][] hashTable = null;
 	
-	public VDictionary()
-	{
+	public VDictionary() {
 		name = "noname";
 	}
 	
-	public VDictionary(String name, String datafile, String indexfile)
-	{
+	public VDictionary(String name, String datafile, String indexfile) {
 		this.name = name;
 		this.data_file = datafile;
 		this.index_file = indexfile;
 	}
 	
-	public byte getVersion()
-	{
+	public byte getVersion() {
 		return version;
 	}
 	
-	public String getName()
-	{
+	public String getName()	{
 		return name;
 	}
 	
-	public WordData readWord(long address) throws IOException
-	{
+	public WordData readWord(long address) throws IOException {
 		short length = 0;
         RandomAccessFile raf = null;
 		try{
@@ -70,7 +64,8 @@ public class VDictionary
 			//go to address of word will-be read
 			raf.seek(address);
 			
-			byte partCode, domain, numOfPart = 0, numOfMean, numOfIdiom;
+			byte partCode, domain;
+            int numOfPart = 0, numOfMean, numOfIdiom;
 			WordData word = new WordData();
             PartOfSpeech part = null;
 			WordMean wordMean = null;
@@ -87,7 +82,7 @@ public class VDictionary
 				return null;
 			
 			//Read relative words
-			int len = raf.read();
+			int len = raf.readByte();
 			buffer = new byte[len];
 			raf.read(buffer);
 			word.setRelativeWord(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -96,13 +91,11 @@ public class VDictionary
 			numOfPart = raf.readByte();
 			//System.out.println("[VDICTIONARY] Num of parts " + numOfPart);
 			
-			for(byte i=0; i<numOfPart; i++)
-			{
+			for(byte i=0; i<numOfPart; i++)	{
 				//read part code
 				partCode = raf.readByte();
 				
-				switch(partCode)
-				{
+				switch(partCode) {
 					case PartOfSpeechFactory.NOUN:
 						byte countability;
 						part = new Noun();
@@ -110,7 +103,7 @@ public class VDictionary
 						((Noun)part).setCountability(countability);
 
                         //Read length of plural form
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Noun)part).setPluralForm(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -118,18 +111,18 @@ public class VDictionary
 						
 					case PartOfSpeechFactory.TRVERB:
 					case PartOfSpeechFactory.INTRVERB:
-						part = new Verb(partCode);
-						len = raf.readByte();
+						part = new Verb((byte)partCode);
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Verb)part).setPast(new String(buffer, 0, len, Charset.forName(UTF8)));
 						
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Verb)part).setPastPerfect(new String(buffer, 0, len, Charset.forName(UTF8)));
 						
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Verb)part).setGerundForm(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -137,12 +130,12 @@ public class VDictionary
 						
 					case PartOfSpeechFactory.ADVERB:
 						part = new Adverb();
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Adverb)part).setComparative(new String(buffer, 0, len, Charset.forName(UTF8)));
 						
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Adverb)part).setSuperlative(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -150,17 +143,17 @@ public class VDictionary
 						
 					case PartOfSpeechFactory.ADJECTIVE: //
 						part = new Adjective();
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Adjective)part).setComparative(new String(buffer, 0, len, Charset.forName(UTF8)));
 						
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Adjective)part).setSuperlative(new String(buffer, 0, len, Charset.forName(UTF8)));
 						
-						len = raf.readByte();
+						len = raf.readUnsignedByte();
 						buffer = new byte[len];
 						raf.read(buffer);
 						((Adjective)part).setAdverbForm(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -180,7 +173,7 @@ public class VDictionary
 				}
 				
 				//read pronunciation
-				len = raf.readByte();
+				len = raf.readShort();
 				buffer = new byte[len];
 				raf.read(buffer);
 				part.setPronunciation(new String(buffer, 0, len, Charset.forName(UTF8)));
@@ -188,8 +181,7 @@ public class VDictionary
 				//read number of mean
 				numOfMean = raf.readByte();
 				//System.out.println("[VDICT-READ] parts " + i + "; Pronunciation: " + part.getPronunciation()+ "; NumOfMean: " + numOfMean);
-				for(byte j=0; j<numOfMean; j++)
-				{
+				for(byte j=0; j<numOfMean; j++)	{
 					//read usage
 					len = raf.readByte();
 					buffer = new byte[len];
@@ -201,10 +193,10 @@ public class VDictionary
 					buffer = new byte[len];
 					raf.read(buffer);
 					mean = new String(buffer, 0, len, Charset.forName(UTF8));
-                    System.out.println(String.format("mean: %s", mean));
+                    //System.out.println(String.format("mean: %s", mean));
 
 					//Read len of Example
-					len = raf.readByte();
+					len = raf.readShort();
 					buffer = new byte[len];
 					raf.read(buffer);
 					example = new String(buffer, 0, len, Charset.forName(UTF8));
@@ -220,8 +212,7 @@ public class VDictionary
 				}
 
                 numOfIdiom = raf.readByte();
-				for(byte j=0; j<numOfIdiom; j++)
-				{
+				for(byte j=0; j<numOfIdiom; j++) {
 					idm = new Idiom();
 					
 					len = raf.readByte();
@@ -242,7 +233,7 @@ public class VDictionary
 					mean = new String(buffer, 0, len, Charset.forName(UTF8));
 					
 					//Read len of Example
-					len = raf.readByte();
+					len = raf.readShort();
 					buffer = new byte[len];
 					raf.read(buffer);
 					example = new String(buffer, 0, len, Charset.forName(UTF8));
@@ -260,21 +251,18 @@ public class VDictionary
 			}
 			
 			return word;
-		}catch(IOException ex)
-		{
+		} catch(IOException ex) {
             ex.printStackTrace();
 			return null;
-		}
-        finally {
+		} finally {
             if(raf != null)
                 raf.close();
         }
 	}
 	
-	public boolean markAsDeleted(WordData word) throws IOException
-	{
+	public boolean markAsDeleted(WordData word) throws IOException {
         RandomAccessFile raf = null;
-		try{
+		try {
 			File file = new File(data_file);
 			if(!file.exists())
 				return true;
@@ -283,16 +271,14 @@ public class VDictionary
 			raf.seek(word.getAddress()+2);
 			raf.writeByte(0);
             word.getIndex().setAddress(-1);
-		}
-        finally {
+		} finally {
             if(raf != null)
                 raf.close();
         }
 		return true;
 	}
 	
-	public long writeWord(WordData word) throws IOException
-	{
+	public long writeWord(WordData word) throws IOException {
         RandomAccessFile raf = null;
 		try{
 			File file = new File(data_file);
@@ -320,49 +306,57 @@ public class VDictionary
 			raf.writeByte(1);
 			
 			//write length of relative words
-			if(word.getRelativeWord()==null || word.getRelativeWord().trim().equals(""))
-			{
-				raf.writeShort(0);
-			}
-			else
-			{
+			if(word.getRelativeWord()==null || 
+					word.getRelativeWord().trim().equals("")) {
+				raf.writeByte(0);
+			} else {
 				temp = word.getRelativeWord().getBytes(Charset.forName(UTF8));
-				raf.writeShort(temp.length);
+				raf.writeByte(temp.length);
 				raf.write(temp);
 			}
 				
 			//write num of part
 			raf.writeByte(word.getParts().size());
 			
-			for(PartOfSpeech part : word.getParts())
-			{
+			for(PartOfSpeech part : word.getParts()) {
 				//write part code
 				raf.writeByte(part.getPartCode());
 				
-				switch(part.getPartCode())
-				{
+				switch(part.getPartCode()) {
 					case 0:
 						Noun noun = (Noun)part;
 						raf.writeByte(noun.getCountability());
-						temp = noun.getPluralForm().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(noun.getPluralForm() != null) {
+							temp = noun.getPluralForm().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else
+							raf.writeByte(0);
 						break;
 						
 					case 1: //transitive verb
 					case 2: //intransitive verb
 						Verb verb = (Verb)part;
-						temp = verb.getPast().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(verb.getPast() != null) {
+							temp = verb.getPast().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else 
+							raf.writeByte(0);
 						
-						temp = verb.getPastPerfect().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(verb.getPastPerfect() != null) {
+							temp = verb.getPastPerfect().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else
+							raf.writeByte(0);
 						
-						temp = verb.getGerundForm().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(verb.getGerundForm() != null ) {
+							temp = verb.getGerundForm().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else 
+							raf.writeByte(0);
 						break;
 						
 					case 3: //Adverb
@@ -378,17 +372,27 @@ public class VDictionary
 						
 					case 4:
 						Adjective adj = (Adjective)part;
-						temp = adj.getComparative().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(adj.getComparative() != null) {
+							temp = adj.getComparative().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else 
+							raf.writeByte(0);
 						
-						temp = adj.getSuperlative().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(adj.getSuperlative() != null) {
+							temp = adj.getSuperlative().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else 
+							raf.writeByte(0);
 						
-						temp = adj.getAdverbForm().getBytes(Charset.forName(UTF8));
-						raf.writeByte(temp.length);
-						raf.write(temp);
+						if(adj.getAdverbForm() != null) {
+							temp = adj.getAdverbForm().getBytes(Charset.forName(UTF8));
+							raf.writeByte(temp.length);
+							raf.write(temp);
+						} else {
+							raf.writeByte(0);
+						}
 						break;
 						
 					case 5:
@@ -400,52 +404,47 @@ public class VDictionary
 				}
 				
 				//write pronunciation
-				if(part.getPronunciation()!=null)
-				{
+				if(part.getPronunciation()!=null) {
 					temp = part.getPronunciation().getBytes(Charset.forName(UTF8));
 					raf.writeShort(temp.length);
 					raf.write(temp);
-				}
-				else
+				} else
 					raf.writeShort(0);
 				
 				//write num of means
 				raf.writeByte(part.getMeans().size());
 
 				//write means
-				for(WordMean mean: part.getMeans())
-				{
-					byte[] meanBytes = mean.getMean().getBytes(UTF8);
-					byte[] exampleBytes = mean.getExample().getBytes(UTF8);
-					byte[] usage = mean.getUsage().getBytes(UTF8);
-					
+				for(WordMean mean: part.getMeans())	{
 					//write usage
-					if(usage != null)
-					{
+					if(mean.getUsage() != null) {
+						byte[] usage = mean.getUsage().getBytes(UTF8);
 						raf.writeByte(usage.length);
 						raf.write(usage);
-					}
-					else
+					} else
 						raf.writeByte(0);
 					
 					//write length of mean
+					byte[] meanBytes = mean.getMean().getBytes(UTF8);
 					raf.writeByte(meanBytes.length);
 					raf.write(meanBytes);
 					
 					//write example
-					raf.writeByte(exampleBytes.length);
-					raf.write(exampleBytes);
+					if(mean.getExample() != null) {
+						byte[] exampleBytes = mean.getExample().getBytes(UTF8);
+						raf.writeShort(exampleBytes.length);
+						raf.write(exampleBytes);
+					} else
+						raf.writeShort(0);
 					
 					//write domain
 					raf.writeByte(mean.getDomain());
 				}
 
                 //write num of idiom
-                if(part.getIdms() != null)
-                {
+                if(part.getIdms() != null) {
                     raf.writeByte(part.getIdms().size());
-                    for(Idiom idm: part.getIdms())
-                    {
+                    for(Idiom idm: part.getIdms()) {
                         byte[] buff = idm.getIdm().getBytes(UTF8);
 
                         raf.writeByte(buff.length);
@@ -469,14 +468,13 @@ public class VDictionary
                 }
 			}
 			return word.getAddress();
-		}finally {
+		} finally {
             if(raf != null)
                 raf.close();
         }
 	}
 	
-	public boolean loadIndex() throws FileNotFoundException, IOException
-	{
+	public boolean loadIndex() throws FileNotFoundException, IOException {
 		FileInputStream fileInputStream = null;
 		boolean result = false;
         int byteRead;
@@ -494,8 +492,7 @@ public class VDictionary
             DataInputStream dis = new DataInputStream(fileInputStream);
 			//read version
 			this.version = (byte)fileInputStream.read();
-			while( true )
-			{
+			while( true ) {
 				WordIndex idx = new WordIndex();
 				
 				//read address of word start at 1 and is 8 bytes in length
@@ -519,21 +516,16 @@ public class VDictionary
 				
 				//System.out.println("[VDICT-LOADINDEX] " + strWord+ ": " + h1 + " " + h2 + " "+h3 + " " + h4);
 				
-				if(hashTable[h1][h2][h3][h4] == null)
-				{
+				if(hashTable[h1][h2][h3][h4] == null) {
 					hashTable[h1][h2][h3][h4] = idx;
-				}
-				else
+				} else
 					hashTable[h1][h2][h3][h4].setNext(idx);
 				
 				//System.out.println("[VDICT-LOADINDEX] Load " + wordlen + " - " +idx.getWord() + " at address " + idx.getAddress());
 			}
-		}catch(EOFException ee)
-        {
+		} catch(EOFException ee) {
             result = true;
-        }
-        finally
-        {
+        } finally {
             if(fileInputStream != null)
                 fileInputStream.close();
         }
@@ -544,8 +536,7 @@ public class VDictionary
 	 * 
 	 * 
 	 * */
-	public boolean addWord2HashTable(WordData word) throws IOException
-	{
+	public boolean addWord2HashTable(WordData word) throws IOException {
 		WordIndex index = word.getIndex();
 		byte[] hc = this.hash(index.getWord());
 		index.setHashCode(hc, 0);
@@ -557,27 +548,25 @@ public class VDictionary
 		
 		//System.out.println("[VDICT-ADD] " + index.getWord()+ " with hashcode: " + h1 + " " + h2 + " " + h3 + " " + h4);
 		
-		if(hashTable[h1][h2][h3][h4] == null) //if this is a new index (word) completely
-		{
+		//if this is a new index (word) completely
+		if(hashTable[h1][h2][h3][h4] == null) {
 			hashTable[h1][h2][h3][h4] = index;
 			hashTable[h1][h2][h3][h4].setAddress(writeWord(word));
-		}
-		else
-		{
+		} else {
 			WordIndex tempIndex = hashTable[h1][h2][h3][h4];
 			
 			/*
 			 * 	if this slot has been used already and the word at this slop different to the one we are going to add, so
 			 * 	we check the next node at this slot.
 			 * */
-			while(tempIndex!=null && (!index.getWord().trim().toUpperCase().equals(tempIndex.getWord().trim().toUpperCase())))
+			while(tempIndex!=null && 
+					(!index.getWord().trim().toUpperCase().equals(tempIndex.getWord().trim().toUpperCase())))
 				tempIndex = tempIndex.getNext();
 				
 			
 			if(tempIndex==null)//if this word is a new word which has hashcode = hashTable[h1][h2][h3][h4] 
 				hashTable[h1][h2][h3][h4].setNext(index);
-			else
-			{
+			else {
 				//if this word is already existed
 				//write word to data file and update its address to hashtable
 				tempIndex.setAddress(writeWord(word));
@@ -586,8 +575,7 @@ public class VDictionary
 		return true;
 	}
 	
- 	private byte[] hash(String strWord)
-	{
+ 	private byte[] hash(String strWord)	{
 		byte[] hc = new byte[4];
 		String hashString = soundex(strWord);
 		
@@ -599,19 +587,14 @@ public class VDictionary
 		return hc;
 	}
 	
-	private String soundex(String s) 
-	{
-
+	private String soundex(String s) {
 	    // Algorithm works on uppercase (mainframe era).
-	    String t = s.toUpperCase();
-	    
-	    
+	    String t = s.toUpperCase();   
 	    StringBuffer res = new StringBuffer();
 	    char c, prev = '?';
 
 	    // Main loop: find up to 4 chars that map.
-	    for (int i=0; i<t.length() && res.length() < 4 && (c = t.charAt(i)) != ','; i++) 
-	    {
+	    for (int i=0; i<t.length() && res.length() < 4 && (c = t.charAt(i)) != ','; i++)  {
 	    	//System.out.println("[VDICT-HASH] SOUNDEX " + s + " - After hash " + t.charAt(i));	
 	      // Check to see if the given character is alphabetic.
 	      // Text is already converted to uppercase. Algorithm
@@ -631,14 +614,18 @@ public class VDictionary
 	      }
 	    }
 	    if (res.length() == 0)
-	      return null;
+	      return "0000";
 	    for (int i=res.length(); i<4; i++)
 	      res.append('0');
 	    return res.toString();
 	}
 	
-	public ArrayList<WordIndex> initListWord(String strWord)
-	{
+	/**
+	 * 
+	 * @param strWord
+	 * @return a list of word that has prefix a strWord
+	 */
+	public ArrayList<WordIndex> initListWord(String strWord) {
 		ArrayList<WordIndex> wordlist = new ArrayList<WordIndex>();
 		byte[] hashCode = hash(strWord);
 		WordIndex idx;
@@ -652,11 +639,9 @@ public class VDictionary
 		for(i=a;i<26 && flag;i++)
 			for(int j=b;j<NUMINDEX && flag;j++)
 				for(int k=c;k<NUMINDEX && flag;k++)
-					for(int l=d;l<NUMINDEX && flag;l++)
-					{
+					for(int l=d;l<NUMINDEX && flag;l++)	{
 						idx = hashTable[i][j][k][l];
-						while(idx != null)
-						{
+						while(idx != null)	{
 							wordlist.add(idx);
 							idx = idx.getNext();
 							count++;
@@ -668,8 +653,7 @@ public class VDictionary
 		return wordlist;
 	}
 	
-	public WordIndex findIndex(String word)
-	{
+	public WordIndex findIndex(String word) {
 		byte[] hashCode = hash(word);
 		WordIndex idx = null;
 		
@@ -680,14 +664,13 @@ public class VDictionary
 		
 		//System.out.println("[VDICT-FINDINDEX] " + word+ ": " + a + " " + b + " "+c + " " + d);
 		
-		if(hashTable[a][b][c][d] != null)
-		{
+		if(hashTable[a][b][c][d] != null) {
 			WordIndex temp = hashTable[a][b][c][d];
 			
 			//System.out.println("[VDICT-FINDINDEX] word in hashtable " + temp.getWord());
 			
-			while(temp!=null && !temp.getWord().toUpperCase().equals(word.toUpperCase()))
-			{
+			while(temp!=null && 
+					!temp.getWord().toUpperCase().equals(word.toUpperCase())) {
 				temp = temp.getNext();
 			}
 			
@@ -698,14 +681,12 @@ public class VDictionary
 		return idx;
 	}
 	
-	public WordData loadWord(String word)
-	{
+	public WordData loadWord(String word) {
 		return null;
 	}
 	
-	public boolean overwriteIndex()
-	{
-		try{
+	public boolean overwriteIndex() {
+		try {
 			File file = new File(index_file);
 			FileOutputStream os = new FileOutputStream(file);
 			
@@ -714,10 +695,8 @@ public class VDictionary
 			for(int i=0;i<26;i++)
 				for(int j=0;j<NUMINDEX;j++)
 					for(int k=0;k<NUMINDEX;k++)
-						for(int l=0;l<NUMINDEX;l++)
-						{
-							if(hashTable[i][j][k][l] != null)
-							{
+						for(int l=0;l<NUMINDEX;l++)	{
+							if(hashTable[i][j][k][l] != null) {
 								DataOutputStream dos = new DataOutputStream(os);
 								dos.writeLong(hashTable[i][j][k][l].getAddress());
 								byte[] word = hashTable[i][j][k][l].getWord().getBytes(UTF8);
@@ -728,8 +707,7 @@ public class VDictionary
 			os.close();
 			
 			return true;
-		}catch(IOException ex)
-		{
+		}catch(IOException ex){
 			return false;
 		}
 	}
