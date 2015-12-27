@@ -7,8 +7,7 @@ package nautilus.vdict.data;
  * Time: 4:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PartOfSpeechFactory
-{
+public class PartOfSpeechFactory {
     public static final int NOUN = 0;
     public static final int TRVERB = 1;
     public static final int INTRVERB = 2;

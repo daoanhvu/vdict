@@ -12,7 +12,11 @@
     <LinearLayout android:layout_height="wrap_content"  
     	android:id="@+id/linearLayout1"
     	android:layout_width="match_parent"> 
-        <AutoCompleteTextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:text="AutoCompleteTextView" android:id="@+id/autoCompleteWord">
+        <AutoCompleteTextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:id="@+id/autoCompleteWord">
             <requestFocus></requestFocus>
         </AutoCompleteTextView>
         <Button android:id="@+id/btnSearch" android:layout_height="wrap_content" android:text="Go" android:layout_width="wrap_content"></Button>

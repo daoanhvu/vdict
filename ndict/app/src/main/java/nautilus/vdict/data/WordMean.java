@@ -66,6 +66,12 @@ public class WordMean {
 	public String getExample() {
 		return example;
 	}
+
+	public boolean hasExample() {
+		if( (example != null) && (example.trim().length()>0))
+			return true;
+		return false;
+	}
 	
 	public void setExample(String exValue) {
 		example = exValue;

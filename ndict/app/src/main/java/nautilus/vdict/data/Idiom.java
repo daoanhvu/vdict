@@ -2,25 +2,21 @@ package nautilus.vdict.data;
 
 import java.nio.charset.Charset;
 
-public class Idiom 
-{
+public class Idiom {
 	private PartOfSpeech parent;
 	private WordMean mean;
 	private String idm;
 	
 	private short length = 0;
 	
-	public Idiom()
-	{
+	public Idiom() {
 		parent = null;
 		mean = null;
 		idm = null;
 	}
 	
-	public short getLength()
-	{
-		if(length <= 0)
-		{
+	public short getLength() {
+		if(length <= 0)	{
 			length = (short)(idm.getBytes(Charset.forName("utf-8"))).length;
 			length += (mean.getLength()) + 1;
 		}

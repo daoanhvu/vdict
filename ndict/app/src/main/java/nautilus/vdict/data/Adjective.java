@@ -3,19 +3,18 @@ package nautilus.vdict.data;
 import java.nio.charset.Charset;
 
 public class Adjective extends PartOfSpeech {
+	private static final String PART_NAME = "adj";
 	private String comparative;
 	private String superlative;
 	private String adverbForm;
 	
 	public Adjective() {
-		partCode = 4;
 		comparative = null;
 		superlative = null;
 		adverbForm = null;
 	}
 	
 	public Adjective(WordData w) {
-		partCode = 4;
 		word = w;
 		word.addPart(this);
 		comparative = null;
@@ -59,5 +58,10 @@ public class Adjective extends PartOfSpeech {
 	@Override
 	public byte getPartCode() {
 		return 4;
+	}
+
+	@Override
+	public String getPartName() {
+		return PART_NAME;
 	}
 }

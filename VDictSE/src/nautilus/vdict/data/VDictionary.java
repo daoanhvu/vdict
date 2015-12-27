@@ -491,15 +491,15 @@ public class VDictionary {
 			fileInputStream = new FileInputStream(index_file);
             DataInputStream dis = new DataInputStream(fileInputStream);
 			//read version
-			this.version = (byte)fileInputStream.read();
+			this.version = dis.readByte();
 			while( true ) {
 				WordIndex idx = new WordIndex();
 				
 				//read address of word start at 1 and is 8 bytes in length
 				idx.setAddress(dis.readLong());
 				
-				//Read word length
-				int wordlen = fileInputStream.read();
+				//Read word text length
+				int wordlen = dis.readByte();
 				if(wordlen <=0)
 					break;
 				buffer = new byte[wordlen];
@@ -689,15 +689,14 @@ public class VDictionary {
 		try {
 			File file = new File(index_file);
 			FileOutputStream os = new FileOutputStream(file);
+			DataOutputStream dos = new DataOutputStream(os);
 			
 			os.write(this.version);
-			
 			for(int i=0;i<26;i++)
 				for(int j=0;j<NUMINDEX;j++)
 					for(int k=0;k<NUMINDEX;k++)
 						for(int l=0;l<NUMINDEX;l++)	{
 							if(hashTable[i][j][k][l] != null) {
-								DataOutputStream dos = new DataOutputStream(os);
 								dos.writeLong(hashTable[i][j][k][l].getAddress());
 								byte[] word = hashTable[i][j][k][l].getWord().getBytes(UTF8);
 								dos.writeByte(word.length);
@@ -709,6 +708,22 @@ public class VDictionary {
 			return true;
 		}catch(IOException ex){
 			return false;
+		}
+	}
+	
+	/**
+	 * This is function is to test the byte order of the systems
+	 */
+	public void testByteOrder(){
+		try{
+			FileOutputStream fileout = new FileOutputStream(new File("D:\\projects\\nautilus-dictionary\\vdict\\data\\test.data"));
+			DataOutputStream dos = new DataOutputStream(fileout);
+			dos.writeShort(100);
+			dos.writeShort(560);
+			dos.flush();
+			dos.close();
+		}catch(IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 }

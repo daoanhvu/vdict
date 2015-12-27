@@ -84,9 +84,47 @@
 			</mean>
 			<mean>
 				<text>bao hàm (nghĩa)</text>
-				<example>the word while denotes all white things as snow, papaer, foam...</example>
+				<example>the word white denotes all white things as snow, papaer, foam...</example>
 				<exampleMean>từ word bao hàm tất cả những vật trắng như tuyết, giấy bọt..</exampleMean>
 			</mean>
 		</partOfSpeed>
 	</word>
+	
+	<word>
+		<text>unique</text>
+		<partOfSpeed name="adj" code="4" domain="">
+			<pronounce>ju:'ni:k</pronounce>
+			<mean>
+				<text>chỉ có một, duy nhất, đơn nhất, vô song</text>
+				<example>unique meaning</example>
+				<exampleMean>nghĩa duy nhất</exampleMean>
+			</mean>
+			<mean>
+				<text>kỳ cục, lạ đời, dị thường</text>
+				<example>you are unique</example>
+				<exampleMean>Anh là kỳ lạ thật</exampleMean>
+			</mean>
+		</partOfSpeed>
+		
+		<partOfSpeed name="noun" code="0" domain="">
+			<pronounce>ju:'ni:k</pronounce>
+			<mean>
+				<text>vật duy nhất, vật chỉ có một không hai</text>
+			</mean>
+		</partOfSpeed>
+	</word>
+	
+	<word>
+		<text>exist</text>
+		<partOfSpeed name="verb" code="2" domain="">
+			<pronounce>ig'zist</pronounce>
+			<mean>
+				<text>tồn tại, sống</text>
+			</mean>
+			<mean>
+				<text>hiện có</text>
+			</mean>
+		</partOfSpeed>
+	</word>
+	
 </vdict>

@@ -243,6 +243,10 @@ public class MainFormSWT {
         		"D:/projects/nautilus-dictionary/vdict/data/vdict.idx");
         try {
             dictionary.loadIndex();
+            
+            //For testing purpose
+            dictionary.testByteOrder();
+            
         } catch (IOException e) {
         	System.out.println("There is no data at the specified location.");
             //e.printStackTrace();

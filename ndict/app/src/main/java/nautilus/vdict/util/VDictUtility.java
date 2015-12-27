@@ -4,10 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class VDictUtility
-{
-	public static byte[] long2Bytes(long value) throws IOException
-	{
+public class VDictUtility {
+	public static byte[] long2Bytes(long value) throws IOException {
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream();  
 	    DataOutputStream dos = new DataOutputStream(bos);  
 	    dos.writeLong(value);
@@ -16,8 +14,7 @@ public class VDictUtility
 	    return data;
 	}
 	
-	public static byte[] getBytesFitLen(byte[] data, int len)
-	{
+	public static byte[] getBytesFitLen(byte[] data, int len) {
 		byte[] rs = new byte[len];
 		
 		for(int i=0;i<len;i++)

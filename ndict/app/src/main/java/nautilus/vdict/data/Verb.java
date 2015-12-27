@@ -3,14 +3,20 @@ package nautilus.vdict.data;
 import java.nio.charset.Charset;
 
 public class Verb extends PartOfSpeech {
+	private static final String PART_NAME1 = "tr. v";
+	private static final String PART_NAME2 = "intr. v";
 	private String past;
 	private String pastPerfect;
 	private String gerundForm;
+
+
+	private byte partCode;
 	
 	public Verb() {
 		past = null;
 		pastPerfect = null;
 		gerundForm = null;
+		partCode = 1;
 	}
 	
 	public Verb(byte pc) {
@@ -65,6 +71,11 @@ public class Verb extends PartOfSpeech {
 	
 	@Override
 	public byte getPartCode() {
-		return 1;
+		return partCode;
+	}
+
+	@Override
+	public String getPartName() {
+		return partCode==1?PART_NAME1:PART_NAME2;
 	}
 }

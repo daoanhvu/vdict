@@ -3,6 +3,7 @@ package nautilus.vdict.data;
 import java.nio.charset.Charset;
 
 public class Adverb extends PartOfSpeech {
+	private static final String PART_NAME = "adv";
 	private String comparative;
 	private String superlative;
 	
@@ -22,7 +23,6 @@ public class Adverb extends PartOfSpeech {
 	public Adverb(WordData w) {
 		word = w;
 		word.addPart(this);
-		partCode = 3;
 		comparative = null;
 		superlative = null;
 	}
@@ -50,5 +50,10 @@ public class Adverb extends PartOfSpeech {
 	public byte getPartCode() {
 		return 3;
 	}
-	
+
+	@Override
+	public String getPartName() {
+		return PART_NAME;
+	}
+
 }

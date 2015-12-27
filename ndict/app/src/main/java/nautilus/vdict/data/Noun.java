@@ -3,6 +3,7 @@ package nautilus.vdict.data;
 import java.nio.charset.Charset;
 
 public class Noun extends PartOfSpeech {
+	private static final String PART_NAME = "noun";
 	// 0: non-count
 	// 1: count
 	// both of above
@@ -11,14 +12,12 @@ public class Noun extends PartOfSpeech {
 	
 	public Noun() {
 		word = null;
-		partCode = 0;
 		countability = -1;
 		pluralForm = null;
 	}
 	
 	public Noun(WordData w)	{
 		word = w;
-		partCode = 0;
 		countability = -1;
 		pluralForm = null;
 		word.addPart(this);
@@ -50,5 +49,10 @@ public class Noun extends PartOfSpeech {
 	@Override
 	public byte getPartCode() {
 		return 0;
+	}
+
+	@Override
+	public String getPartName() {
+		return PART_NAME;
 	}
 }
