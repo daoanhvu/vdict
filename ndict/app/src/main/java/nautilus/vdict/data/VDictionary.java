@@ -25,6 +25,7 @@ public class VDictionary {
 	    //N  O   P   W   R   S   T   U   V   W   X   Y   Z
 	    '5','0','1','2','6','2','3','0','1','0','2','0','2'
 	  };
+	private static final int MAX_LIST_COUNT = 10;
 	private static final int NUMINDEX = 7;
 	private static final String UTF8 = "utf-8";
 	//private static final short version = 1;
@@ -679,7 +680,7 @@ public class VDictionary {
 							count++;
 						}
 						
-						if(count > 5) {
+						if(count >= MAX_LIST_COUNT) {
 							shouldContinue = false;
 							break;
 						}

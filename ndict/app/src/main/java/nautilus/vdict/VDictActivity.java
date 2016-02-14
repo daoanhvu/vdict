@@ -4,45 +4,58 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 //import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import nautilus.vdict.data.*;
 import nautilus.vdict.util.FileUtil;
 
-public class VDictActivity extends Activity {
+public class VDictActivity extends AppCompatActivity {
 	//private static final String TAG = "VDictActivity";
 	
 	private AutoCompleteWordAdapter suggestionAdapter;
+	private ImageButton btnSearch;
 	private AutoCompleteTextView autoCompleteWord;
 	private WebView wvResult;
-	private Button btnSearch;
 	private VDictionary dict = null;
 	
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        autoCompleteWord = (AutoCompleteTextView)findViewById(R.id.autoCompleteWord);
+
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setCustomView(R.layout.action_bar);
+		View actionBarView = actionBar.getCustomView();
+
+        autoCompleteWord = (AutoCompleteTextView)actionBarView.findViewById(R.id.autoCompleteWord);
 		autoCompleteWord.setThreshold(1);
+
+		btnSearch = (ImageButton)actionBarView.findViewById(R.id.btnOk);
+
         wvResult = (WebView)findViewById(R.id.wvResult);
 		WebSettings webSettings = wvResult.getSettings();
 		webSettings.setDefaultTextEncodingName("utf-8");
-        btnSearch = (Button)findViewById(R.id.btnSearch);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
         
         //Initialize data, here we read data from assets and write into app folder.
         dict = new VDictionary(this.getApplicationContext(), "English-Vietnamese",
@@ -75,7 +88,6 @@ public class VDictActivity extends Activity {
         
         btnSearch.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				onBtnSearchClick();
 			}
 		});
@@ -99,10 +111,21 @@ public class VDictActivity extends Activity {
 				word.setWord(index.getWord());
 				strHtml = initHtml(word);
 //				wvResult.loadData("<?xml version=\"1.0\" encoding\"utf-8\" ?><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /></head><body><h1><font color='#4c6ff4'>" + word.getWord() + "</color></h1><br>" + strHtml + "</body>", "text/html; charset=utf-8", "utf-8");
-				wvResult.loadData("<html><head><meta http-equiv=\"Content-Type\" " +
+
+//				wvResult.loadData("<html><head><meta http-equiv=\"Content-Type\" " +
+//						"content=\"text/html; charset=UTF-8\" /></head><body>" +
+//						"<h1><font color='#4c6ff4'>" + word.getWord() + "</color></h1><br>" + strHtml + "</body></html>",
+//						"text/html; charset=utf-8", "utf-8");
+				final String finalHtml = "<html><head><meta http-equiv=\"Content-Type\" " +
 						"content=\"text/html; charset=UTF-8\" /></head><body>" +
-						"<h1><font color='#4c6ff4'>" + word.getWord() + "</color></h1><br>" + strHtml + "</body></html>",
-						"text/html; charset=utf-8", "utf-8");
+						"<h1><font color='#4c6ff4'>" + word.getWord() + "</color></h1><br>" + strHtml + "</body></html>";
+						//"text/html; charset=utf-8", "utf-8";
+				wvResult.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						wvResult.loadDataWithBaseURL(null, finalHtml, "text/html", "utf-8", "utf-8");
+					}
+				}, 50);
 			}
 		} catch (IOException ex){
 			wvResult.loadData("<html></html>", "text/html", "utf-8");

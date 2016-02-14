@@ -4,26 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <TextView android:layout_width="fill_parent"
-    	android:textAppearance="?android:attr/textAppearanceSmall"
-    	android:layout_height="wrap_content"
-    	android:id="@+id/textView1" android:text="Short information about selected dictionary"></TextView>
-    	
-    <LinearLayout android:layout_height="wrap_content"  
-    	android:id="@+id/linearLayout1"
-    	android:layout_width="match_parent"> 
-        <AutoCompleteTextView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=""
-            android:id="@+id/autoCompleteWord">
-            <requestFocus></requestFocus>
-        </AutoCompleteTextView>
-        <Button android:id="@+id/btnSearch" android:layout_height="wrap_content" android:text="Go" android:layout_width="wrap_content"></Button>
-    </LinearLayout>
     <WebView 
     	android:id="@+id/wvResult"
     	android:layout_width="match_parent"
     	android:layout_height="fill_parent"
+        android:background="#ffeef3fa"
     />
 </LinearLayout>

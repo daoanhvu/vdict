@@ -127,4 +127,39 @@
 		</partOfSpeed>
 	</word>
 	
+	<word>
+		<text>elaborate</text>
+		<partOfSpeed name="adj" code="4" domain="">
+			<pronounce>i'læbərit</pronounce>
+			<mean>
+				<text>Phức tạp</text>
+				<example>an elaborate machine</example>
+				<exampleMean>một cái máy phức tạp</exampleMean>
+				<synonyms></synonyms>
+			</mean>
+			<mean>
+				<text>Tỉ mỉ, kỹ lưỡng, công phu, trau chuốt, tinh vi</text>
+				<example>an elaborate investigation</example>
+				<exampleMean>một cuộc điều tra tỉ mỉ</exampleMean>
+			</mean>
+		</partOfSpeed>
+		<partOfSpeed name="verb" code="1" domain="">
+			<pronounce>i'læbərit</pronounce>
+			<mean>
+				<text>thảo kỹ lưỡng, làm ra cái gì một cách tỉ mỉ</text>
+				<example>to elaborate a theory</example>
+			</mean>
+			<mean>
+				<text></text>
+			</mean>
+		</partOfSpeed>
+		<partOfSpeed name="verb" code="2" domain="">
+			<pronounce>i'læbərit</pronounce>
+			<mean>
+				<text>nói thêm, bổ sung chi tiết</text>
+				<example>to elaborate on a problem</example>
+			</mean>
+		</partOfSpeed>
+	</word>
+	
 </vdict>
